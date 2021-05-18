@@ -92,7 +92,7 @@ public class Deck : MonoBehaviour
             PushPlayer();
             PushDealer();
         }
-        if (player.GetComponent<CardHand>().points == 21) finalMessage.text = "El Juegador ha hecho Blackjack";
+        if (player.GetComponent<CardHand>().points == 21) finalMessage.text = "El Jugador ha hecho Blackjack";
         if (dealer.GetComponent<CardHand>().points == 21) finalMessage.text = "El Dealer ha hecho Blackjack";
 
     }
@@ -122,31 +122,36 @@ public class Deck : MonoBehaviour
 
     public void Hit()
     {
-        /*TODO: 
-         * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
-         */
-        
-        //Repartimos carta al jugador
-        PushPlayer();
+        dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true); // Volteamos la carta del Dealer
 
-        /*TODO:
-         * Comprobamos si el jugador ya ha perdido y mostramos mensaje
-         */      
+       //Repartimos carta al jugador
+       PushPlayer();
 
+        if (player.GetComponent<CardHand>().points == 21) // Comprobamos si ha hecho blackjack
+        {
+            // En caso de que si, mostramos mensaje y anulamos los botones
+            finalMessage.text = "El Jugador ha hecho Blackjack";
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+        }
+        if (player.GetComponent<CardHand>().points > 21) // Comprobamos si ha perdido
+        {
+            // En caso de que si, mostramos mensaje y anulamos los botones
+            finalMessage.text = "El Jugador ha perdido";
+            hitButton.interactable = false;
+            stickButton.interactable = false;
+        }
     }
 
     public void Stand()
     {
-        /*TODO: 
-         * Si estamos en la mano inicial, debemos voltear la primera carta del dealer.
-         */
 
         /*TODO:
          * Repartimos cartas al dealer si tiene 16 puntos o menos
          * El dealer se planta al obtener 17 puntos o más
          * Mostramos el mensaje del que ha ganado
-         */                
-         
+         */
+
     }
 
     public void PlayAgain()
