@@ -11,6 +11,8 @@ public class Deck : MonoBehaviour
     public Button playAgainButton;
     public Text finalMessage;
     public Text probMessage;
+    public Text bancaMessage;
+    public Text apuestaMessage;
 
     public int[] values = new int[52];
     int cardIndex = 0;    
@@ -133,6 +135,7 @@ public class Deck : MonoBehaviour
             finalMessage.text = "El Jugador ha hecho Blackjack";
             hitButton.interactable = false;
             stickButton.interactable = false;
+            player.GetComponent<CardHand>().banca += player.GetComponent<CardHand>().apuesta * 2; // Gana el doble
         }
         if (player.GetComponent<CardHand>().points > 21) // Comprobamos si ha perdido
         {
@@ -164,11 +167,13 @@ public class Deck : MonoBehaviour
                 else
                 {
                     finalMessage.text = "El Juegador ha GANADO";
+                    player.GetComponent<CardHand>().banca += player.GetComponent<CardHand>().apuesta * 2; // Gana el doble
                 }
 
                 if (player.GetComponent<CardHand>().points == dealer.GetComponent<CardHand>().points) // Comprobamos si han quedado en empate
                 {
                     finalMessage.text = "EMPATE";
+                    player.GetComponent<CardHand>().banca += player.GetComponent<CardHand>().apuesta;
                 }
                 fin = true; // Salimos del bucle
                 hitButton.interactable = false;
@@ -183,11 +188,31 @@ public class Deck : MonoBehaviour
         hitButton.interactable = true;
         stickButton.interactable = true;
         finalMessage.text = "";
+        bancaMessage.text = "Banca: " + player.GetComponent<CardHand>().banca.ToString() + " €";
+        apuestaMessage.text = "Apuesta: 0 €";
         player.GetComponent<CardHand>().Clear();
         dealer.GetComponent<CardHand>().Clear();          
         cardIndex = 0;
         ShuffleCards();
         StartGame();
     }
+
+    public void apostar()
+    {
+        if (player.GetComponent<CardHand>().banca != 0)
+        {
+            player.GetComponent<CardHand>().banca -= 10;
+            player.GetComponent<CardHand>().apuesta += 10;
+            bancaMessage.text = "Banca: " + player.GetComponent<CardHand>().banca.ToString() + " €";
+            apuestaMessage.text = "Apuesta: " + player.GetComponent<CardHand>().apuesta.ToString() + " €";
+        }
+
+    }
+
+    public void ganaApuesta()
+    {
+        player.GetComponent<CardHand>().banca += player.GetComponent<CardHand>().apuesta * 2;
+    }
+
     
 }

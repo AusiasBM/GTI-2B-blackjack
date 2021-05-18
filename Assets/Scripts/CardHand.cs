@@ -7,7 +7,9 @@ public class CardHand : MonoBehaviour
     public GameObject card;
     public bool isDealer = false;
     public int points;
-    private int coordY;    
+    private int coordY;
+    public int banca = 1000;
+    public int apuesta;
      
     private void Awake()
     {
@@ -30,7 +32,8 @@ public class CardHand : MonoBehaviour
         {
             Destroy(g);
         }
-        cards.Clear();                        
+        cards.Clear();
+        apuesta = 0;
     }        
 
     public void InitialToggle()
@@ -86,6 +89,5 @@ public class CardHand : MonoBehaviour
         points = val;
        
     }
-     
 
 }
