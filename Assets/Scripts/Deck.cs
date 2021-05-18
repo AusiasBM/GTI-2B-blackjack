@@ -29,11 +29,27 @@ public class Deck : MonoBehaviour
 
     private void InitCardValues()
     {
-        /*TODO:
-         * Asignar un valor a cada una de las 52 cartas del atributo "values".
-         * En principio, la posición de cada valor se deberá corresponder con la posición de faces. 
-         * Por ejemplo, si en faces[1] hay un 2 de corazones, en values[1] debería haber un 2.
-         */
+        int palo = 0; // Creamos una variable para el valor de las cartas en cada palo.
+
+        // Creamos un for hasta 52 que es el tamaño de values
+        for (int i = 0; i < 52; i++)
+        {
+            palo++; // Sumamos 1
+
+            if (palo <= 10) // Comprovamos si el número de la variable palo es menor o igual a 10
+            {
+                values[i] = palo; // En caso de que si, el valor de esa carta será su número
+            }
+            else // En caso de que no, sabemos que se trata de J, Q o K
+            {
+                values[i] = 10; // Entonces les pondremos el valor de 10
+                
+                if (palo == 13) palo = 0; // Y por último encaso de que palo sea 13, significa que se ha terminado ese palo y lo volvemos a 0
+            }
+
+            
+            Debug.Log(values[i].ToString());
+        }
     }
 
     private void ShuffleCards()
