@@ -43,22 +43,39 @@ public class Deck : MonoBehaviour
             else // En caso de que no, sabemos que se trata de J, Q o K
             {
                 values[i] = 10; // Entonces les pondremos el valor de 10
-                
                 if (palo == 13) palo = 0; // Y por último encaso de que palo sea 13, significa que se ha terminado ese palo y lo volvemos a 0
             }
 
-            
-            Debug.Log(values[i].ToString());
+            //Debug.Log(values[i].ToString());
         }
     }
 
     private void ShuffleCards()
     {
-        /*TODO:
-         * Barajar las cartas aleatoriamente.
-         * El método Random.Range(0,n), devuelve un valor entre 0 y n-1
-         * Si lo necesitas, puedes definir nuevos arrays.
-         */       
+        int rnd; // Creamos una variable donde va ha ir el número random
+        int temp; // Aquí guardaremos el número que quitamos para poner otro aleatorio
+        Sprite tempSprite; // Aquí hacemos lo mismo para el Sprite
+
+        for (int i = 51; i >= 0; i--)
+        {
+            //Debug.Log("INI: " + values[i] + "; " + faces[i]);
+
+            rnd = Random.Range(0, 52); // Generamos el número aleatorio.
+
+            // Hacemos el proceso para el array de valores
+            temp = values[i]; // guardamos el número actual en la variable temporal.
+            values[i] = values[rnd]; // ponemos en el hueco actual el número que corresponde con el aleatorio.
+            values[rnd] = temp; // Y en el sitio del aleatorio ponemos el actual.
+
+            // Hacemos lo mismo para el array de Sprites
+            tempSprite = faces[i];
+            faces[i] = faces[rnd];
+            faces[rnd] = tempSprite;
+
+
+            //Debug.Log("RND: " + values[i] + "; " + faces[i]);
+        }
+
     }
 
     void StartGame()
