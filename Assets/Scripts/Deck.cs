@@ -94,6 +94,7 @@ public class Deck : MonoBehaviour
         }
         if (player.GetComponent<CardHand>().points == 21) finalMessage.text = "El Juegador ha hecho Blackjack";
         if (dealer.GetComponent<CardHand>().points == 21) finalMessage.text = "El Dealer ha hecho Blackjack";
+
     }
 
     private void CalculateProbabilities()
