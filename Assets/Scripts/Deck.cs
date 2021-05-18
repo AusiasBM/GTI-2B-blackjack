@@ -145,12 +145,36 @@ public class Deck : MonoBehaviour
 
     public void Stand()
     {
+        dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true); // Volteamos carta del Dealer
 
-        /*TODO:
-         * Repartimos cartas al dealer si tiene 16 puntos o menos
-         * El dealer se planta al obtener 17 puntos o más
-         * Mostramos el mensaje del que ha ganado
-         */
+        bool fin = false;
+
+        do // Creamos un bluce que se hace hasta que el Dealer tiene una puntuación mayor a 16
+        {
+            if (dealer.GetComponent<CardHand>().points <= 16) // Comprobamos si tiene menos de 16 puntos
+            {
+                PushDealer(); // En caso de ser así, repartimos carta
+            }
+            else
+            {
+                if (player.GetComponent<CardHand>().points < dealer.GetComponent<CardHand>().points && dealer.GetComponent<CardHand>().points <= 21) // Comprobamos si el juegador ha ganado
+                {
+                    finalMessage.text = "El Dealer ha GANADO";
+                }
+                else
+                {
+                    finalMessage.text = "El Juegador ha GANADO";
+                }
+
+                if (player.GetComponent<CardHand>().points == dealer.GetComponent<CardHand>().points) // Comprobamos si han quedado en empate
+                {
+                    finalMessage.text = "EMPATE";
+                }
+                fin = true; // Salimos del bucle
+                hitButton.interactable = false;
+                stickButton.interactable = false;
+            }
+        } while (!fin);
 
     }
 
