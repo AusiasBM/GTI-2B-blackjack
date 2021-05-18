@@ -36,9 +36,17 @@ public class Deck : MonoBehaviour
         {
             palo++; // Sumamos 1
 
-            if (palo <= 10) // Comprovamos si el número de la variable palo es menor o igual a 10
+            if (palo <= 10) // Comprobamos si el número de la variable palo es menor o igual a 10
             {
-                values[i] = palo; // En caso de que si, el valor de esa carta será su número
+                if (palo == 1) // Comprobamos si es un AS
+                {
+                    values[i] = 11; // En caso de que si, el valor de esa carta será 11
+                }
+                else 
+                {
+                    values[i] = palo; // En caso de que no, el valor de esa carta será su número
+                }
+                
             }
             else // En caso de que no, sabemos que se trata de J, Q o K
             {
@@ -72,7 +80,6 @@ public class Deck : MonoBehaviour
             faces[i] = faces[rnd];
             faces[rnd] = tempSprite;
 
-
             //Debug.Log("RND: " + values[i] + "; " + faces[i]);
         }
 
@@ -84,10 +91,9 @@ public class Deck : MonoBehaviour
         {
             PushPlayer();
             PushDealer();
-            /*TODO:
-             * Si alguno de los dos obtiene Blackjack, termina el juego y mostramos mensaje
-             */
         }
+        if (player.GetComponent<CardHand>().points == 21) finalMessage.text = "El Juegador ha hecho Blackjack";
+        if (dealer.GetComponent<CardHand>().points == 21) finalMessage.text = "El Dealer ha hecho Blackjack";
     }
 
     private void CalculateProbabilities()
@@ -102,18 +108,12 @@ public class Deck : MonoBehaviour
 
     void PushDealer()
     {
-        /*TODO:
-         * Dependiendo de cómo se implemente ShuffleCards, es posible que haya que cambiar el índice.
-         */
         dealer.GetComponent<CardHand>().Push(faces[cardIndex],values[cardIndex]);
         cardIndex++;        
     }
 
     void PushPlayer()
     {
-        /*TODO:
-         * Dependiendo de cómo se implemente ShuffleCards, es posible que haya que cambiar el índice.
-         */
         player.GetComponent<CardHand>().Push(faces[cardIndex], values[cardIndex]/*,cardCopy*/);
         cardIndex++;
         CalculateProbabilities();
