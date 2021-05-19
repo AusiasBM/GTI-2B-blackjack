@@ -33,7 +33,8 @@ public class CardHand : MonoBehaviour
             Destroy(g);
         }
         cards.Clear();
-        apuesta = 0;
+
+        apuesta = 0; // Limpiamos el contador de la apuesta
     }        
 
     public void InitialToggle()
