@@ -91,8 +91,9 @@ public class Deck : MonoBehaviour
     {
         for (int i = 0; i < 2; i++)
         {
-            PushPlayer();
+            
             PushDealer();
+            PushPlayer();
         }
         if (player.GetComponent<CardHand>().points == 21) finalMessage.text = "El Jugador ha hecho Blackjack";
         if (dealer.GetComponent<CardHand>().points == 21) finalMessage.text = "El Dealer ha hecho Blackjack";
@@ -101,14 +102,6 @@ public class Deck : MonoBehaviour
 
     private void CalculateProbabilities()
     {
-        /*TODO:
-         * Calcular las probabilidades de:
-         * - Teniendo la carta oculta, probabilidad de que el dealer tenga más puntuación que el jugador
-         * - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
-         * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
-         */
-
-
         // - Probabilidad de que el jugador obtenga más de 21 si pide una carta
 
         string probMayor21 = "";
@@ -131,7 +124,7 @@ public class Deck : MonoBehaviour
             for (int i = 0; i < dealer.GetComponent<CardHand>().cards.Count; i++)
             {
                 // En este if comprobamos si la carta del delaer que está hacia arriba es una de las cartas que podría obtener el jugador si coge otra carta
-                if (dealer.GetComponent<CardHand>().cards[i].GetComponent<CardModel>().value >= puntosParaPasarse)
+                if (dealer.GetComponent<CardHand>().cards[i].GetComponent<CardModel>().value >= puntosParaPasarse && i > 0) // No contamos la carta oculta
                 {
                     cartasQueSobrepasan -= 1; // En caso de que si que la hayamos contado restamos esa carta porque no podría salir
                 }
@@ -157,7 +150,82 @@ public class Deck : MonoBehaviour
 
 
 
-        probMessage.text = probMayor21;
+        // - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
+
+        string probEntre17 = "";
+
+        int cartasHasta17 = 0;
+        int cartasHasta21 = 21 - player.GetComponent<CardHand>().points;
+        float cartasQueEntran = 0;
+
+        // Este if es para comprobar si los puntos ya han llegado a 17
+        if (player.GetComponent<CardHand>().points < 17)
+        {
+            cartasHasta17 = 17 - player.GetComponent<CardHand>().points; // En caso de que no, calculamos los puntos que hacen falta hasta 17
+        }
+
+        // Este if es para comprobar si los puntos que hacen falta hasta 21 son más de 11
+        if (cartasHasta21 > 11)
+        {
+            cartasHasta21 = 11; // De ser así ponemos que los puntos que hacen falta hasta 21 son 11, para que en el for que tenemos más abajo no cuente cartas que no existen
+        }
+
+        // en caso de que los puntos sean menores a 6 no hay ninguna carta que nos permita llegar a 17, por consecuencia la probabilidad sería 0
+        if (player.GetComponent<CardHand>().points < 6)
+        {
+            probEntre17 = "\n - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta: 0.0";
+        }
+        else // En caso de que los puntos sean mayores que 6, ya tenemos cartas que nos permiten llegar a 17.
+        {
+
+            for (int i = cartasHasta17; i <= cartasHasta21; i++)
+            {
+                if (i == 10)
+                {
+                    cartasQueEntran += 12;
+                }
+                else
+                {
+                    cartasQueEntran += 4;
+                }
+
+            }
+
+
+            // Hacemos este for para recorrer todas la cartas que tiene el dealer
+            for (int i = 0; i < dealer.GetComponent<CardHand>().cards.Count; i++)
+            {
+                // En este if comprobamos si la carta del delaer que está hacia arriba es una de las cartas que podría obtener el jugador si coge otra carta
+                if (dealer.GetComponent<CardHand>().cards[i].GetComponent<CardModel>().value >= cartasHasta17 && dealer.GetComponent<CardHand>().cards[i].GetComponent<CardModel>().value <= cartasHasta21 && i > 0) // No contamos la carta oculta
+                {
+                    cartasQueEntran -= 1; // En caso de que si que la hayamos contado restamos esa carta porque no podría salir
+                }
+            }
+
+
+            // Lo mismo pero para el player
+            for (int i = 0; i < player.GetComponent<CardHand>().cards.Count; i++)
+            {
+                // En este if comprobamos si las cartas del player son unas de las cartas que podría obtener el player si coge otra carta
+                if (player.GetComponent<CardHand>().cards[i].GetComponent<CardModel>().value >= cartasHasta17 && player.GetComponent<CardHand>().cards[i].GetComponent<CardModel>().value <= cartasHasta21)
+                {
+                    cartasQueEntran -= 1; // En caso de que si que la hayamos contado restamos esa carta porque no podría salir
+                }
+            }
+
+
+            Debug.Log("cartas hasta 17: " + cartasHasta17 + ", cartas hasta 21: " + cartasHasta21 + ", cartas que entran: " + cartasQueEntran + ", Cartas en la mesa: " + cardIndex);
+
+            // Calculamos la probabilidad
+            probEntre17 = "\n - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta: " + cartasQueEntran / (52.0 - cardIndex * 0.0);
+        }
+
+
+        // - Teniendo la carta oculta, probabilidad de que el dealer tenga más puntuación que el jugador
+
+
+
+        probMessage.text = probEntre17 + "\n\n" + probMayor21;
 
     }
 
