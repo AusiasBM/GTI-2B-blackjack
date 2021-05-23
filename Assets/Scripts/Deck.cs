@@ -107,6 +107,58 @@ public class Deck : MonoBehaviour
          * - Probabilidad de que el jugador obtenga entre un 17 y un 21 si pide una carta
          * - Probabilidad de que el jugador obtenga más de 21 si pide una carta          
          */
+
+
+        // - Probabilidad de que el jugador obtenga más de 21 si pide una carta
+
+        string probMayor21 = "";
+
+        if (player.GetComponent<CardHand>().points < 12) // Al no haber ninguna carta mayor a 10 puntos no se puede sobrepasar los 21, si pensamos en el as lo tratamos como 1
+        {
+            probMayor21 = "\n - Probabilidad de que obtenga más de 21 si pide otra carta: 0.0";
+        }else if (player.GetComponent<CardHand>().points >= 12) // Si tiene más de 11 ya hay cartas que sobrepasan los 21
+        {
+            int puntosParaPasarse = 22 - player.GetComponent<CardHand>().points;
+            float cartasQueSobrepasan = 12; // Si es mayor que 11, automáticamente los 3 dieces de cada palo sobrepasan los 21
+
+            // En este for sumamos las cartas posibles que pueden hacer que tenga una puntuación mayor a 21 sin contar los dieces
+            for (int i = puntosParaPasarse; i <= 9; i++)
+            {
+                cartasQueSobrepasan += 4;
+            }
+
+            // Hacemos este for para recorrer todas la cartas que tiene el dealer
+            for (int i = 0; i < dealer.GetComponent<CardHand>().cards.Count; i++)
+            {
+                // En este if comprobamos si la carta del delaer que está hacia arriba es una de las cartas que podría obtener el jugador si coge otra carta
+                if (dealer.GetComponent<CardHand>().cards[i].GetComponent<CardModel>().value >= puntosParaPasarse)
+                {
+                    cartasQueSobrepasan -= 1; // En caso de que si que la hayamos contado restamos esa carta porque no podría salir
+                }
+            }
+
+
+            // Lo mismo pero para el player
+            for (int i = 0; i < player.GetComponent<CardHand>().cards.Count; i++)
+            {
+                // En este if comprobamos si las cartas del player son unas de las cartas que podría obtener el player si coge otra carta
+                if (player.GetComponent<CardHand>().cards[i].GetComponent<CardModel>().value >= puntosParaPasarse)
+                {
+                    cartasQueSobrepasan -= 1; // En caso de que si que la hayamos contado restamos esa carta porque no podría salir
+                }
+            }
+
+            Debug.Log("puntos para pasarse: " + puntosParaPasarse + ", cartas que sobrepasan: " + cartasQueSobrepasan + ", Cartas en la mesa: " + cardIndex);
+
+            // Calculamos la probabilidad
+            probMayor21 = "\n - Probabilidad de que obtenga más de 21 si pide otra carta: " + cartasQueSobrepasan / (52.0 - cardIndex * 0.0);
+
+        }
+
+
+
+        probMessage.text = probMayor21;
+
     }
 
     void PushDealer()
