@@ -121,7 +121,7 @@ public class Deck : MonoBehaviour
         if (player.GetComponent<CardHand>().points < 12) // Al no haber ninguna carta mayor a 10 puntos no se puede sobrepasar los 21, si pensamos en el as lo tratamos como 1
         {
             probMayor21 = "\n - Probabilidad de que obtenga más de 21 si pide otra carta: 0.0";
-        }else if (player.GetComponent<CardHand>().points >= 12) // Si tiene más de 11 ya hay cartas que sobrepasan los 21
+        }else // Si tiene más de 11 ya hay cartas que sobrepasan los 21
         {
             int puntosParaPasarse = 22 - player.GetComponent<CardHand>().points;
             float cartasQueSobrepasan = 12; // Si es mayor que 11, automáticamente los 3 dieces de cada palo sobrepasan los 21
