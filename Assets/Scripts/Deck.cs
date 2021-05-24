@@ -100,6 +100,7 @@ public class Deck : MonoBehaviour
             finalMessage.text = "El Jugador ha hecho Blackjack";
             hitButton.interactable = false;
             stickButton.interactable = false;
+            dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
         }
         if (dealer.GetComponent<CardHand>().points == 21)
         {
@@ -108,6 +109,7 @@ public class Deck : MonoBehaviour
             dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true); // Volteamos la carta del Dealer
             hitButton.interactable = false;
             stickButton.interactable = false;
+            dealer.GetComponent<CardHand>().cards[0].GetComponent<CardModel>().ToggleFace(true);
         }
     }
 
